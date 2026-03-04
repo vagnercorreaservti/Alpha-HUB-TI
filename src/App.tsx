@@ -8,7 +8,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   SiGoogle, SiAmd, SiIntel, SiCorsair, SiPython, SiOpenjdk, SiCss, SiHtml5, 
   SiDell, SiApple, SiAndroid, SiLinux, SiAnydesk, SiTeamviewer,
-  SiTypescript, SiJavascript, SiReact, SiNodedotjs
+  SiTypescript, SiJavascript, SiReact, SiNodedotjs,
+  SiHp, SiCisco, SiOpenai, SiX,
+  SiDocker, SiPostgresql, SiTailwindcss, SiGit, SiKubernetes, SiMongodb
 } from 'react-icons/si';
 import { 
   Shield, 
@@ -157,10 +159,14 @@ interface ExpertiseCardProps {
 const ExpertiseCard: React.FC<ExpertiseCardProps> = ({ icon: Icon, title, description, index, onClick, id }) => (
   <motion.div 
     id={id}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
+    initial={{ opacity: 0, y: 30, scale: 0.9 }}
+    whileInView={{ opacity: 1, y: 0, scale: 1 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.5, delay: index * 0.1 }}
+    transition={{ 
+      duration: 0.6, 
+      delay: index * 0.1,
+      ease: [0.21, 0.47, 0.32, 0.98]
+    }}
     whileHover={{ y: -15, scale: 1.06 }}
     className="p-8 bg-brand-surface/40 backdrop-blur-md border border-white/10 rounded-2xl hover:border-brand-primary/80 hover:shadow-[0_0_60px_rgba(16,185,129,0.4)] transition-all duration-500 group relative overflow-hidden cursor-pointer"
     onClick={onClick}
@@ -168,7 +174,12 @@ const ExpertiseCard: React.FC<ExpertiseCardProps> = ({ icon: Icon, title, descri
     tabIndex={0}
     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); }}
   >
-    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    <motion.div 
+      initial={{ width: "0%" }}
+      whileInView={{ width: "100%" }}
+      transition={{ duration: 1, delay: index * 0.1 + 0.5 }}
+      className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-transparent via-brand-primary to-transparent opacity-50"
+    />
     <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
     <div className="absolute -inset-[100%] group-hover:animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,rgba(16,185,129,0.05)_50%,transparent_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
     <div className="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-brand-dark transition-all duration-500 shadow-[0_0_20px_rgba(16,185,129,0.2)] group-hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]">
@@ -294,6 +305,44 @@ const TechBrandsMarquee = () => {
               <brand.icon size={36} />
             </div>
             <span className="text-xs font-black uppercase tracking-[0.3em] opacity-20 group-hover:opacity-100 transition-all">{brand.name}</span>
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+};
+
+const PartnersMarquee = () => {
+  const partners = [
+    { icon: SiIntel, name: "Microsoft" },
+    { icon: SiApple, name: "Apple" },
+    { icon: SiDell, name: "Dell" },
+    { icon: SiHp, name: "HP" },
+    { icon: SiCorsair, name: "Corsair" },
+    { icon: SiAmd, name: "Gigabyte" },
+    { icon: SiCisco, name: "Cisco" },
+    { icon: SiOpenai, name: "ChatGPT" },
+    { icon: SiGoogle, name: "Gemini" },
+    { icon: Terminal, name: "DeepSeek" },
+    { icon: SiX, name: "Grok" },
+  ];
+
+  return (
+    <div className="py-8 bg-brand-primary/10 border-y border-brand-primary/20 overflow-hidden relative w-full">
+      <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-brand-dark to-transparent z-10" />
+      <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-brand-dark to-transparent z-10" />
+      
+      <motion.div 
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        className="flex items-center gap-24 whitespace-nowrap w-max px-12"
+      >
+        {[...partners, ...partners].map((partner, i) => (
+          <div key={i} className="flex items-center gap-6 text-zinc-400 hover:text-brand-primary transition-all duration-300 group cursor-default">
+            <div className="opacity-80 group-hover:opacity-100 group-hover:scale-125 transition-all">
+              <partner.icon size={40} />
+            </div>
+            <span className="text-sm font-black uppercase tracking-[0.3em] opacity-60 group-hover:opacity-100 transition-all">{partner.name}</span>
           </div>
         ))}
       </motion.div>
@@ -1483,19 +1532,25 @@ export default function App() {
       <SuccessCases />
 
       {/* Sobre Section */}
-      <section id="sobre" className="py-24 bg-brand-surface/50">
-        <div className="max-w-7xl mx-auto px-6">
+      <section id="sobre" className="py-24 bg-brand-surface/50 relative overflow-hidden">
+        {/* Background Partners Marquee - Positioned behind photo/text */}
+        <div className="absolute top-[160px] md:top-[160px] left-0 w-full opacity-90 pointer-events-none z-0">
+          <PartnersMarquee />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
+              className="flex flex-col items-center md:items-start"
             >
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-10">
+              <div className="flex flex-col md:flex-row items-center md:items-center gap-8 mb-10">
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary to-emerald-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                  <div className="relative w-40 h-40 rounded-full overflow-hidden border-2 border-brand-primary/30">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary to-emerald-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                  <div className="relative w-64 h-64 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-brand-primary/30 transition-transform duration-500 group-hover:scale-110 group-hover:border-brand-primary group-hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]">
                     <img 
                       src="https://i.ibb.co/bgDyrL0b/image.png" 
                       alt="Vagner Corrêa" 
@@ -1505,7 +1560,7 @@ export default function App() {
                     />
                   </div>
                 </div>
-                <div>
+                <div className="text-center md:text-left">
                   <h3 className="text-2xl font-display font-bold text-white mb-1">Vagner Corrêa</h3>
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[11px] font-mono uppercase tracking-wider">
                     &lt; Expertise Sênior em TI &gt;
@@ -1516,8 +1571,8 @@ export default function App() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-bold uppercase tracking-wider mb-6">
                 <CheckCircle2 size={10} /> Disponível para novos projetos
               </div>
-              <h2 className="text-4xl md:text-5xl mb-8">Trajetória de Excelência</h2>
-              <p className="text-zinc-400 text-lg mb-12 leading-relaxed">
+              <h2 className="text-4xl md:text-5xl mb-8 text-center md:text-left">Trajetória de Excelência</h2>
+              <p className="text-zinc-400 text-lg mb-12 leading-relaxed text-center md:text-left">
                 Uma jornada dedicada à excelência técnica, liderando projetos que redefineem padrões da indústria e entregam resultados mensuráveis para organizações de todos os portes.
               </p>
               
@@ -1558,11 +1613,18 @@ export default function App() {
                 >
                   {[
                     { Icon: SiReact, color: "#61DAFB", angle: 0 },
-                    { Icon: SiPython, color: "#3776AB", angle: 60 },
-                    { Icon: SiNodedotjs, color: "#339933", angle: 120 },
-                    { Icon: SiLinux, color: "#FCC624", angle: 180 },
-                    { Icon: SiApple, color: "#FFFFFF", angle: 240 },
-                    { Icon: SiAndroid, color: "#3DDC84", angle: 300 },
+                    { Icon: SiPython, color: "#3776AB", angle: 27.7 },
+                    { Icon: SiNodedotjs, color: "#339933", angle: 55.4 },
+                    { Icon: SiLinux, color: "#FCC624", angle: 83.1 },
+                    { Icon: SiApple, color: "#FFFFFF", angle: 110.8 },
+                    { Icon: SiAndroid, color: "#3DDC84", angle: 138.5 },
+                    { Icon: SiTypescript, color: "#3178C6", angle: 166.2 },
+                    { Icon: SiJavascript, color: "#F7DF1E", angle: 193.9 },
+                    { Icon: SiDocker, color: "#2496ED", angle: 221.6 },
+                    { Icon: SiPostgresql, color: "#4169E1", angle: 249.3 },
+                    { Icon: SiTailwindcss, color: "#06B6D4", angle: 277 },
+                    { Icon: SiGit, color: "#F05032", angle: 304.7 },
+                    { Icon: SiMongodb, color: "#47A248", angle: 332.4 },
                   ].map((item, i) => (
                     <div
                       key={i}
