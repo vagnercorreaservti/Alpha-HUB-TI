@@ -48,12 +48,15 @@ import {
   BookOpen,
   History,
   MousePointer2,
-  Lock
+  Lock,
+  Download,
+  ChevronDown
 } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDownloadsOpen, setIsDownloadsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -70,12 +73,29 @@ const Navbar = () => {
     { name: 'Contato', href: '#contato' },
   ];
 
+  const downloadLinks = [
+    { 
+      name: 'TeamViewer', 
+      href: 'https://www.teamviewer.com/pt-br/download/windows/', 
+      icon: SiTeamviewer, 
+      color: '#0080FF',
+      tag: 'Suporte Remoto'
+    },
+    { 
+      name: 'AnyDesk', 
+      href: 'https://anydesk.com/pt/downloads/windows', 
+      icon: SiAnydesk, 
+      color: '#EF4444',
+      tag: 'Acesso Rápido'
+    },
+  ];
+
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-brand-dark/80 backdrop-blur-md border-b border-white/5 py-4' : 'bg-transparent py-6'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/80 backdrop-blur-md border-b border-slate-200 py-4 shadow-sm' : 'bg-transparent py-6'}`}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="#" className="text-xl font-display font-bold text-white tracking-tighter flex items-center gap-2">
+        <a href="#" className="text-xl font-display font-bold text-slate-900 tracking-tighter flex items-center gap-2">
           <span className="text-brand-primary">Alpha Tech</span>
-          <span className="text-zinc-500 text-sm font-medium hidden sm:block">| Hub de Serviços em Ti</span>
+          <span className="text-slate-400 text-sm font-medium hidden sm:block">| Hub de Serviços em Ti</span>
         </a>
 
         {/* Desktop Nav */}
@@ -84,14 +104,61 @@ const Navbar = () => {
             <a 
               key={link.name} 
               href={link.href} 
-              className="text-sm font-medium text-zinc-400 hover:text-brand-primary transition-colors"
+              className="text-sm font-medium text-slate-500 hover:text-brand-primary transition-colors"
             >
               {link.name}
             </a>
           ))}
+          
+          {/* Downloads Dropdown */}
+          <div 
+            className="relative"
+            onMouseEnter={() => setIsDownloadsOpen(true)}
+            onMouseLeave={() => setIsDownloadsOpen(false)}
+          >
+            <button className="flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-brand-primary transition-colors py-2">
+              Downloads
+              <ChevronDown size={14} className={`transition-transform duration-300 ${isDownloadsOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {isDownloadsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-full right-0 mt-2 w-64 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden p-2 z-50"
+                >
+                  <div className="px-3 py-2 mb-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ferramentas de Suporte</span>
+                  </div>
+                  {downloadLinks.map((link) => (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-all group"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-brand-primary/10 transition-colors">
+                        <link.icon size={20} color={link.color} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-slate-900 group-hover:text-brand-primary transition-colors">{link.name}</span>
+                        <span className="text-[10px] text-slate-400 font-medium">{link.tag}</span>
+                      </div>
+                      <Download size={14} className="ml-auto text-slate-300 group-hover:text-brand-primary transition-colors" />
+                    </a>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <a 
             href="#contato" 
-            className="px-5 py-2 bg-brand-primary text-brand-dark text-sm font-semibold rounded-full hover:bg-brand-primary/90 transition-all"
+            className="px-5 py-2 bg-brand-primary text-white text-sm font-semibold rounded-full hover:bg-brand-primary/90 transition-all shadow-lg shadow-brand-primary/20"
           >
             Iniciar Conversa
           </a>
@@ -99,7 +166,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Toggle */}
         <button 
-          className="md:hidden text-white p-2"
+          className="md:hidden text-slate-900 p-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
         >
@@ -114,22 +181,48 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 bg-brand-surface border-b border-white/5 p-6 md:hidden flex flex-col gap-4"
+            className="absolute top-full left-0 right-0 bg-white border-b border-slate-200 p-6 md:hidden flex flex-col gap-4 shadow-xl"
           >
             {navLinks.map((link) => (
               <a 
                 key={link.name} 
                 href={link.href} 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg font-medium text-zinc-300 hover:text-brand-primary py-3 px-2 block transition-colors active:bg-white/5 rounded-lg"
+                className="text-lg font-medium text-slate-600 hover:text-brand-primary py-3 px-2 block transition-colors active:bg-slate-50 rounded-lg"
               >
                 {link.name}
               </a>
             ))}
+            
+            {/* Mobile Downloads */}
+            <div className="py-2">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest px-2 mb-3 block">Downloads</span>
+              <div className="grid grid-cols-1 gap-2">
+                {downloadLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 p-4 bg-slate-50 border border-slate-100 rounded-xl hover:bg-slate-100 transition-all"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-sm">
+                      <link.icon size={20} color={link.color} />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-base font-bold text-slate-900">{link.name}</span>
+                      <span className="text-xs text-slate-500">{link.tag}</span>
+                    </div>
+                    <Download size={16} className="ml-auto text-brand-primary" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
             <a 
               href="#contato" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="mt-2 w-full py-3 bg-brand-primary text-brand-dark text-center font-semibold rounded-xl"
+              className="mt-2 w-full py-3 bg-brand-primary text-white text-center font-semibold rounded-xl shadow-lg shadow-brand-primary/20"
             >
               Iniciar Conversa
             </a>
@@ -142,8 +235,8 @@ const Navbar = () => {
 
 const StatCard = ({ value, label }: { value: string, label: string }) => (
   <div className="flex flex-col">
-    <span className="text-3xl md:text-4xl font-display font-bold text-white">{value}</span>
-    <span className="text-xs uppercase tracking-widest text-zinc-500 mt-1">{label}</span>
+    <span className="text-3xl md:text-4xl font-display font-bold text-slate-900">{value}</span>
+    <span className="text-xs uppercase tracking-widest text-slate-400 mt-1">{label}</span>
   </div>
 );
 
@@ -154,9 +247,10 @@ interface ExpertiseCardProps {
   index: number;
   onClick: () => void;
   id?: string;
+  bgImage?: string;
 }
 
-const ExpertiseCard: React.FC<ExpertiseCardProps> = ({ icon: Icon, title, description, index, onClick, id }) => (
+const ExpertiseCard: React.FC<ExpertiseCardProps> = ({ icon: Icon, title, description, index, onClick, id, bgImage }) => (
   <motion.div 
     id={id}
     initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -168,28 +262,44 @@ const ExpertiseCard: React.FC<ExpertiseCardProps> = ({ icon: Icon, title, descri
       ease: [0.21, 0.47, 0.32, 0.98]
     }}
     whileHover={{ y: -15, scale: 1.06 }}
-    className="p-8 bg-brand-surface/40 backdrop-blur-md border border-white/10 rounded-2xl hover:border-brand-primary/80 hover:shadow-[0_0_60px_rgba(16,185,129,0.4)] transition-all duration-500 group relative overflow-hidden cursor-pointer"
+    className="p-8 bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl hover:border-brand-primary/80 hover:shadow-[0_20px_40px_rgba(16,185,129,0.1)] transition-all duration-500 group relative overflow-hidden cursor-pointer"
     onClick={onClick}
     role="button"
     tabIndex={0}
     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); }}
   >
+    {/* Background Image with Overlay */}
+    {bgImage && (
+      <div className="absolute inset-0 z-0">
+        <img 
+          src={bgImage} 
+          alt={title} 
+          className="w-full h-full object-cover opacity-20 group-hover:opacity-40 group-hover:scale-110 transition-all duration-1000 grayscale group-hover:grayscale-0"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700" />
+      </div>
+    )}
+
     <motion.div 
       initial={{ width: "0%" }}
       whileInView={{ width: "100%" }}
       transition={{ duration: 1, delay: index * 0.1 + 0.5 }}
-      className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-transparent via-brand-primary to-transparent opacity-50"
+      className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-transparent via-brand-primary to-transparent opacity-50 z-10"
     />
-    <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-    <div className="absolute -inset-[100%] group-hover:animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,rgba(16,185,129,0.05)_50%,transparent_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
-    <div className="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-brand-dark transition-all duration-500 shadow-[0_0_20px_rgba(16,185,129,0.2)] group-hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]">
-      <Icon size={28} />
+    <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
+    <div className="absolute -inset-[100%] group-hover:animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,rgba(16,185,129,0.05)_50%,transparent_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none z-10" />
+    
+    <div className="relative z-20">
+      <div className="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-brand-dark transition-all duration-500 shadow-[0_0_20px_rgba(16,185,129,0.2)] group-hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]">
+        <Icon size={28} />
+      </div>
+      <h3 className="text-2xl mb-3 font-bold text-slate-900 group-hover:text-brand-primary transition-colors tracking-tight">{title}</h3>
+      <p className="text-slate-500 text-sm leading-relaxed mb-8 group-hover:text-slate-700 transition-colors line-clamp-3">{description}</p>
+      <button className="inline-flex items-center gap-2 text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] hover:gap-4 transition-all group/link">
+        Explorar Solução <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
+      </button>
     </div>
-    <h3 className="text-2xl mb-3 font-bold text-white group-hover:text-brand-primary transition-colors tracking-tight">{title}</h3>
-    <p className="text-zinc-400 text-sm leading-relaxed mb-8 group-hover:text-zinc-200 transition-colors line-clamp-3">{description}</p>
-    <button className="inline-flex items-center gap-2 text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] hover:gap-4 transition-all group/link">
-      Explorar Solução <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
-    </button>
   </motion.div>
 );
 
@@ -202,19 +312,32 @@ const ServiceModal = ({ isOpen, onClose, service }: { isOpen: boolean, onClose: 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-brand-dark/90 backdrop-blur-xl"
+          className="absolute inset-0 bg-slate-900/40 backdrop-blur-xl"
         />
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
           onClick={onClose}
-          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-brand-surface border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl custom-scrollbar cursor-pointer"
+          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white border border-slate-200 rounded-3xl p-8 md:p-12 shadow-2xl custom-scrollbar cursor-pointer overflow-hidden"
         >
-          <div className="absolute top-0 left-0 w-full h-2 bg-brand-primary" />
+          {/* Background Image with Overlay */}
+          {service.bgImage && (
+            <div className="absolute inset-0 z-0 pointer-events-none">
+              <img 
+                src={service.bgImage} 
+                alt={service.title} 
+                className="w-full h-full object-cover opacity-5 grayscale"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-white via-white/95 to-white" />
+            </div>
+          )}
+          <div className="relative z-10">
+            <div className="absolute top-0 left-0 w-full h-2 bg-brand-primary" />
           <button 
             onClick={onClose}
-            className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors"
+            className="absolute top-6 right-6 text-slate-400 hover:text-slate-900 transition-colors"
             aria-label="Fechar modal"
           >
             <X size={24} />
@@ -225,20 +348,20 @@ const ServiceModal = ({ isOpen, onClose, service }: { isOpen: boolean, onClose: 
               {service.icon && <service.icon size={32} />}
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-white">{service.title}</h2>
+              <h2 className="text-3xl font-bold text-slate-900">{service.title}</h2>
               <p className="text-brand-primary font-semibold uppercase text-xs tracking-widest mt-1">Solução Alpha Tech</p>
             </div>
           </div>
 
-          <div className="space-y-6 text-zinc-300 leading-relaxed">
-            <p className="text-lg font-medium text-white">{service.description}</p>
-            <div className="h-px bg-white/5 w-full" />
+          <div className="space-y-6 text-slate-600 leading-relaxed">
+            <p className="text-lg font-medium text-slate-800">{service.description}</p>
+            <div className="h-px bg-slate-100 w-full" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="text-white font-bold mb-3 flex items-center gap-2">
+                <h4 className="text-slate-900 font-bold mb-3 flex items-center gap-2">
                   <CheckCircle2 size={16} className="text-brand-primary" /> O que entregamos:
                 </h4>
-                <ul className="space-y-2 text-sm text-zinc-400">
+                <ul className="space-y-2 text-sm text-slate-500">
                   {service.details.map((detail: string, i: number) => (
                     <li key={i} className="flex items-start gap-2">
                       <span className="text-brand-primary mt-1">•</span> {detail}
@@ -246,9 +369,9 @@ const ServiceModal = ({ isOpen, onClose, service }: { isOpen: boolean, onClose: 
                   ))}
                 </ul>
               </div>
-              <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
-                <h4 className="text-white font-bold mb-2">Por que escolher?</h4>
-                <p className="text-sm text-zinc-400">{service.why}</p>
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                <h4 className="text-slate-900 font-bold mb-2">Por que escolher?</h4>
+                <p className="text-sm text-slate-500">{service.why}</p>
                 <div className="mt-6">
                   <a 
                     href={`https://wa.me/51986529520?text=Olá, gostaria de saber mais sobre ${service.title}`}
@@ -261,7 +384,8 @@ const ServiceModal = ({ isOpen, onClose, service }: { isOpen: boolean, onClose: 
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
+      </motion.div>
       </div>
     )}
   </AnimatePresence>
@@ -290,9 +414,9 @@ const TechBrandsMarquee = () => {
   ];
 
   return (
-    <div className="py-16 bg-brand-dark/50 border-y border-white/5 overflow-hidden relative">
-      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-brand-dark to-transparent z-10" />
-      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-brand-dark to-transparent z-10" />
+    <div className="py-16 bg-slate-50 border-y border-slate-100 overflow-hidden relative">
+      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-50 to-transparent z-10" />
+      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-50 to-transparent z-10" />
       
       <motion.div 
         animate={{ x: ["0%", "-50%"] }}
@@ -300,7 +424,7 @@ const TechBrandsMarquee = () => {
         className="flex items-center gap-20 whitespace-nowrap w-max px-10"
       >
         {[...brands, ...brands].map((brand, i) => (
-          <div key={i} className="flex items-center gap-4 text-zinc-500 hover:text-brand-primary transition-all duration-300 group cursor-default">
+          <div key={i} className="flex items-center gap-4 text-slate-500 hover:text-brand-primary transition-all duration-300 group cursor-default">
             <div className="opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all">
               <brand.icon size={36} />
             </div>
@@ -328,9 +452,9 @@ const PartnersMarquee = () => {
   ];
 
   return (
-    <div className="py-8 bg-brand-primary/10 border-y border-brand-primary/20 overflow-hidden relative w-full">
-      <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-brand-dark to-transparent z-10" />
-      <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-brand-dark to-transparent z-10" />
+    <div className="py-8 bg-brand-primary/5 border-y border-brand-primary/10 overflow-hidden relative w-full">
+      <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-slate-50 to-transparent z-10" />
+      <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-slate-50 to-transparent z-10" />
       
       <motion.div 
         animate={{ x: ["0%", "-50%"] }}
@@ -338,7 +462,7 @@ const PartnersMarquee = () => {
         className="flex items-center gap-24 whitespace-nowrap w-max px-12"
       >
         {[...partners, ...partners].map((partner, i) => (
-          <div key={i} className="flex items-center gap-6 text-zinc-400 hover:text-brand-primary transition-all duration-300 group cursor-default">
+          <div key={i} className="flex items-center gap-6 text-slate-400 hover:text-brand-primary transition-all duration-300 group cursor-default">
             <div className="opacity-80 group-hover:opacity-100 group-hover:scale-125 transition-all">
               <partner.icon size={40} />
             </div>
@@ -356,12 +480,12 @@ const TrajectoryItem = ({ text, index }: { text: string, index: number }) => (
     whileInView={{ opacity: 1, x: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay: index * 0.1 }}
-    className="flex items-start gap-4 py-4 border-b border-white/5 last:border-0"
+    className="flex items-start gap-4 py-4 border-b border-slate-100 last:border-0"
   >
     <div className="mt-1 text-brand-primary">
       <CheckCircle2 size={18} />
     </div>
-    <p className="text-zinc-300 font-medium">{text}</p>
+    <p className="text-slate-600 font-medium">{text}</p>
   </motion.div>
 );
 
@@ -387,7 +511,7 @@ const GoogleIcon = () => (
 );
 
 const TestimonialCard = ({ name, content, image }: { name: string, content: string, image: string, key?: React.Key }) => (
-  <div className="w-[280px] sm:w-[320px] md:w-[380px] flex-shrink-0 bg-white/5 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-white/10 relative group hover:border-brand-primary/50 transition-all duration-500 mx-3 md:mx-4 flex flex-col">
+  <div className="w-[280px] sm:w-[320px] md:w-[380px] flex-shrink-0 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 relative group hover:border-brand-primary/50 transition-all duration-500 mx-3 md:mx-4 flex flex-col shadow-sm">
     <div className="absolute -top-4 -right-4 w-12 h-12 bg-brand-primary/10 rounded-full flex items-center justify-center text-brand-primary opacity-0 group-hover:opacity-100 transition-all duration-500 rotate-12">
       <Quote size={20} />
     </div>
@@ -397,12 +521,12 @@ const TestimonialCard = ({ name, content, image }: { name: string, content: stri
         <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-brand-primary/30 group-hover:border-brand-primary transition-colors duration-500">
           <img src={image} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
         </div>
-        <div className="absolute -bottom-1 -right-1 bg-brand-primary rounded-full p-1 border-2 border-brand-dark">
-          <BadgeCheck size={12} className="text-brand-dark" />
+        <div className="absolute -bottom-1 -right-1 bg-brand-primary rounded-full p-1 border-2 border-white">
+          <BadgeCheck size={12} className="text-white" />
         </div>
       </div>
       <div>
-        <h4 className="text-white font-bold text-base leading-tight group-hover:text-brand-primary transition-colors">{name}</h4>
+        <h4 className="text-slate-900 font-bold text-base leading-tight group-hover:text-brand-primary transition-colors">{name}</h4>
         <div className="flex gap-1 mt-1">
           {[...Array(5)].map((_, i) => (
             <Star key={i} size={12} className="fill-brand-primary text-brand-primary drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
@@ -411,14 +535,14 @@ const TestimonialCard = ({ name, content, image }: { name: string, content: stri
       </div>
     </div>
 
-    <p className="text-zinc-400 text-sm leading-relaxed italic flex-1">
+    <p className="text-slate-500 text-sm leading-relaxed italic flex-1">
       "{content}"
     </p>
     
-    <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between">
+    <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <GoogleIcon />
-        <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Google Verified</span>
+        <span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Google Verified</span>
       </div>
       <div className="text-[10px] text-brand-primary font-mono opacity-50">#ALPHA_CLIENT</div>
     </div>
@@ -835,8 +959,8 @@ const TestimonialsMarquee = () => {
   return (
     <div className="relative w-full overflow-hidden py-10 pause-on-hover">
       {/* Gradient masks for smooth fade */}
-      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-brand-dark to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-brand-dark to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
       
       <div className="flex w-max animate-marquee py-4 items-stretch">
         {marqueeItems.map((item, i) => (
@@ -955,10 +1079,10 @@ const SupportWidget = () => {
                 transition={{ delay: i * 0.1 }}
                 className="flex items-center gap-3 group"
               >
-                <span className="px-3 py-1.5 bg-brand-dark/90 backdrop-blur-md border border-white/10 rounded-lg text-xs font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-xl">
+                <span className="px-3 py-1.5 bg-white/90 backdrop-blur-md border border-slate-200 rounded-lg text-xs font-bold text-slate-900 opacity-0 group-hover:opacity-100 transition-opacity shadow-xl">
                   {action.label}
                 </span>
-                <div className={`w-12 h-12 ${action.color} text-brand-dark rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform`}>
+                <div className={`w-12 h-12 ${action.color} text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform`}>
                   <action.icon size={20} />
                 </div>
               </motion.a>
@@ -969,10 +1093,10 @@ const SupportWidget = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 ${isOpen ? 'bg-zinc-800 rotate-90' : 'bg-brand-primary animate-bounce shadow-brand-primary/20'}`}
+        className={`w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 ${isOpen ? 'bg-slate-800 rotate-90' : 'bg-brand-primary animate-bounce shadow-brand-primary/20'}`}
         aria-label="Menu de Suporte Rápido"
       >
-        {isOpen ? <X size={28} className="text-white" /> : <Headset size={28} className="text-brand-dark" />}
+        {isOpen ? <X size={28} className="text-white" /> : <Headset size={28} className="text-white" />}
       </button>
     </div>
   );
@@ -997,11 +1121,11 @@ const SuccessCases = () => {
   ];
 
   return (
-    <section id="cases" className="py-24 bg-brand-dark relative overflow-hidden">
+    <section id="cases" className="py-24 bg-slate-50 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Cases de <span className="text-brand-primary">Sucesso</span></h2>
-          <p className="text-zinc-500 max-w-2xl mx-auto">Resultados reais entregues com precisão técnica e compromisso Alpha Tech.</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Cases de <span className="text-brand-primary">Sucesso</span></h2>
+          <p className="text-slate-500 max-w-2xl mx-auto">Resultados reais entregues com precisão técnica e compromisso Alpha Tech.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -1011,25 +1135,25 @@ const SuccessCases = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-brand-surface/30 border border-white/5 rounded-3xl overflow-hidden group"
+              className="bg-white border border-slate-200 rounded-3xl overflow-hidden group shadow-md"
             >
               <div className="relative aspect-video overflow-hidden">
                 <img src={item.after} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" referrerPolicy="no-referrer" />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent opacity-60" />
-                <div className="absolute top-4 left-4 px-3 py-1 bg-brand-primary text-brand-dark text-[10px] font-black uppercase tracking-widest rounded-full">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60" />
+                <div className="absolute top-4 left-4 px-3 py-1 bg-brand-primary text-white text-[10px] font-black uppercase tracking-widest rounded-full">
                   {item.tag}
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-white/80 text-xs font-bold">
+                  <div className="flex items-center gap-2 text-white/90 text-xs font-bold">
                     <History size={14} className="text-brand-primary" /> Antes vs Depois
                   </div>
                 </div>
               </div>
               <div className="p-8">
-                <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-brand-primary transition-colors">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6">{item.description}</p>
+                <h3 className="text-2xl font-bold text-slate-900 group-hover:text-brand-primary transition-colors">{item.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed mb-6">{item.description}</p>
                 <div className="flex items-center gap-4">
-                  <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="flex-1 h-1 bg-slate-100 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       whileInView={{ width: '100%' }}
@@ -1074,14 +1198,14 @@ const BlogSection = () => {
   ];
 
   return (
-    <section id="blog" className="py-24 bg-brand-surface/20">
+    <section id="blog" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Blog & <span className="text-brand-primary">Insights</span></h2>
-            <p className="text-zinc-500">Conhecimento técnico compartilhado para fortalecer sua segurança digital.</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Blog & <span className="text-brand-primary">Insights</span></h2>
+            <p className="text-slate-500">Conhecimento técnico compartilhado para fortalecer sua segurança digital.</p>
           </div>
-          <button className="px-6 py-3 border border-white/10 rounded-xl text-white text-sm font-bold hover:bg-white/5 transition-all flex items-center gap-2">
+          <button className="px-6 py-3 border border-slate-200 rounded-xl text-slate-900 text-sm font-bold hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm">
             Ver Todos os Artigos <ArrowRight size={16} />
           </button>
         </div>
@@ -1094,18 +1218,18 @@ const BlogSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="p-8 bg-brand-dark/40 backdrop-blur-md border border-white/5 rounded-3xl hover:border-brand-primary/30 transition-all group cursor-pointer"
+              className="p-8 bg-slate-50 border border-slate-100 rounded-3xl hover:border-brand-primary/30 transition-all group cursor-pointer shadow-sm"
             >
-              <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
+              <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-all">
                 <post.icon size={24} />
               </div>
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-[10px] font-black text-brand-primary uppercase tracking-widest">{post.category}</span>
-                <span className="w-1 h-1 bg-zinc-700 rounded-full" />
-                <span className="text-[10px] text-zinc-500 font-bold">{post.date}</span>
+                <span className="w-1 h-1 bg-slate-200 rounded-full" />
+                <span className="text-[10px] text-slate-400 font-bold">{post.date}</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-4 group-hover:text-brand-primary transition-colors leading-tight">{post.title}</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed mb-8 line-clamp-3">{post.excerpt}</p>
+              <h3 className="text-xl font-bold text-slate-900 mb-4 group-hover:text-brand-primary transition-colors leading-tight">{post.title}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed mb-8 line-clamp-3">{post.excerpt}</p>
               <div className="flex items-center gap-2 text-brand-primary text-xs font-bold group-hover:gap-4 transition-all">
                 Ler Artigo Completo <ArrowRight size={14} />
               </div>
@@ -1129,27 +1253,27 @@ const QuickQuoteForm = () => {
   return (
     <section className="py-24 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="bg-brand-surface/40 backdrop-blur-xl border border-white/10 rounded-[40px] p-8 md:p-16 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 blur-[100px] -z-10" />
+        <div className="bg-white border border-slate-200 rounded-[40px] p-8 md:p-16 relative overflow-hidden shadow-xl">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-[100px] -z-10" />
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-bold uppercase tracking-wider mb-8">
                 <Send size={12} /> Orçamento Expresso
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">Prefere um Contato <span className="text-brand-primary">Formal?</span></h2>
-              <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
+              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight">Prefere um Contato <span className="text-brand-primary">Formal?</span></h2>
+              <p className="text-slate-500 text-lg mb-8 leading-relaxed">
                 Deixe seus dados e nossa equipe técnica entrará em contato em até 2 horas úteis com uma proposta personalizada para sua necessidade.
               </p>
               <div className="space-y-4">
-                <div className="flex items-center gap-4 text-zinc-500">
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-brand-primary">
+                <div className="flex items-center gap-4 text-slate-500">
+                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand-primary">
                     <CheckCircle2 size={20} />
                   </div>
                   <span className="text-sm font-medium">Atendimento B2B Especializado</span>
                 </div>
-                <div className="flex items-center gap-4 text-zinc-500">
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-brand-primary">
+                <div className="flex items-center gap-4 text-slate-500">
+                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand-primary">
                     <CheckCircle2 size={20} />
                   </div>
                   <span className="text-sm font-medium">Proposta Técnica Detalhada</span>
@@ -1157,7 +1281,7 @@ const QuickQuoteForm = () => {
               </div>
             </div>
 
-            <div className="bg-brand-dark/50 p-8 md:p-10 rounded-3xl border border-white/5 shadow-2xl">
+            <div className="bg-slate-50 p-8 md:p-10 rounded-3xl border border-slate-200 shadow-2xl">
               {status === 'success' ? (
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -1167,25 +1291,25 @@ const QuickQuoteForm = () => {
                   <div className="w-20 h-20 bg-brand-primary/20 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-6">
                     <CheckCircle2 size={40} />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Solicitação Enviada!</h3>
-                  <p className="text-zinc-400">Em breve nossa equipe entrará em contato.</p>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Solicitação Enviada!</h3>
+                  <p className="text-slate-500">Em breve nossa equipe entrará em contato.</p>
                   <button onClick={() => setStatus('idle')} className="mt-8 text-brand-primary font-bold text-sm hover:underline">Enviar outra solicitação</button>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Nome Completo</label>
-                      <input required type="text" placeholder="Ex: João Silva" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-zinc-600 focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 outline-none transition-all" />
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nome Completo</label>
+                      <input required type="text" placeholder="Ex: João Silva" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-slate-900 placeholder:text-slate-400 focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 outline-none transition-all" />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">E-mail Corporativo</label>
-                      <input required type="email" placeholder="joao@empresa.com" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-zinc-600 focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 outline-none transition-all" />
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">E-mail Corporativo</label>
+                      <input required type="email" placeholder="joao@empresa.com" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-slate-900 placeholder:text-slate-400 focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 outline-none transition-all" />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Serviço de Interesse</label>
-                    <select className="w-full bg-brand-dark border border-white/10 rounded-xl px-4 py-3.5 text-white outline-none focus:border-brand-primary/50 transition-all appearance-none">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Serviço de Interesse</label>
+                    <select className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-slate-900 outline-none focus:border-brand-primary/50 transition-all appearance-none">
                       <option>Suporte Técnico</option>
                       <option>Infraestrutura de Rede</option>
                       <option>Soluções Cloud</option>
@@ -1194,12 +1318,12 @@ const QuickQuoteForm = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Mensagem / Desafio</label>
-                    <textarea required rows={4} placeholder="Descreva brevemente sua necessidade..." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-zinc-600 focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 outline-none transition-all resize-none" />
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Mensagem / Desafio</label>
+                    <textarea required rows={4} placeholder="Descreva brevemente sua necessidade..." className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-slate-900 placeholder:text-slate-400 focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 outline-none transition-all resize-none" />
                   </div>
                   <button 
                     disabled={status === 'sending'}
-                    className="w-full py-4 bg-brand-primary text-brand-dark font-black rounded-xl hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-brand-primary/20 disabled:opacity-50"
+                    className="w-full py-4 bg-brand-primary text-white font-black rounded-xl hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-brand-primary/20 disabled:opacity-50"
                   >
                     {status === 'sending' ? 'Enviando...' : 'Solicitar Proposta Agora'} <ArrowRight size={18} />
                   </button>
@@ -1222,6 +1346,7 @@ export default function App() {
       icon: Headset,
       title: "Suporte ao Usuário",
       description: "Atendimento técnico especializado que vai até você. Resolvemos problemas de forma rápida e eficiente, garantindo que sua equipe trabalhe sem interrupções.",
+      bgImage: "https://images.unsplash.com/photo-1521791136064-7986c2959213?auto=format&fit=crop&q=80&w=1000",
       details: [
         "Suporte N1 e N2 remoto e presencial",
         "Configuração de e-mails e softwares",
@@ -1235,6 +1360,7 @@ export default function App() {
       icon: Globe,
       title: "Dev & E-commerce",
       description: "Criação de sites profissionais, landing pages, lojas virtuais e aplicativos personalizados. Hospedagem de alta performance com foco em conversão e SEO.",
+      bgImage: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1000",
       details: [
         "Desenvolvimento de Lojas Virtuais completas",
         "Landing Pages de alta conversão",
@@ -1248,6 +1374,7 @@ export default function App() {
       icon: Zap,
       title: "Limpeza de Notebook/PC",
       description: "Mantenha seu equipamento funcionando como novo. Realizamos limpeza profunda interna, troca de pasta térmica e thermalpads.",
+      bgImage: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&q=80&w=1000",
       details: [
         "Desmontagem completa e higienização",
         "Troca de pasta térmica de alta performance",
@@ -1261,6 +1388,7 @@ export default function App() {
       icon: Monitor,
       title: "Conserto de Notebooks",
       description: "Reparo completo e especializado para seu notebook. Realizamos troca de tela, teclado, reparo de carcaças e componentes.",
+      bgImage: "https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&q=80&w=1000",
       details: [
         "Reparo avançado em placa-mãe",
         "Troca de telas LED/OLED e teclados",
@@ -1275,6 +1403,7 @@ export default function App() {
       icon: Cloud,
       title: "Soluções Cloud",
       description: "Migre para a nuvem com segurança e confiança. Oferecemos backup automatizado, servidores cloud e infraestrutura escalável.",
+      bgImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1000",
       details: [
         "Migração de servidores para nuvem",
         "Backup em nuvem 100% automatizado",
@@ -1288,6 +1417,7 @@ export default function App() {
       icon: Server,
       title: "Gerenciamento de Servidores",
       description: "Deixe seus servidores nas mãos de especialistas. Configuração, monitoramento proativo, atualizações de segurança e manutenção preventiva.",
+      bgImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&q=80&w=1000",
       details: [
         "Administração de Windows e Linux Server",
         "Gestão de Active Directory (AD)",
@@ -1301,6 +1431,7 @@ export default function App() {
       icon: Cpu,
       title: "Conserto de Computadores",
       description: "Diagnóstico preciso e reparo profissional para seu computador. Desde manutenção preventiva até upgrades completos e PCs Gamer.",
+      bgImage: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=1000",
       details: [
         "Montagem de PCs Gamer e Workstations",
         "Diagnóstico de falhas de hardware",
@@ -1314,6 +1445,7 @@ export default function App() {
       icon: Users,
       title: "Terceirização de TI",
       description: "Transforme sua TI em vantagem competitiva. Oferecemos suporte completo e gerenciamento profissional da sua infraestrutura tecnológica.",
+      bgImage: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000",
       details: [
         "Gestão completa do departamento de TI",
         "Consultoria estratégica em tecnologia",
@@ -1389,7 +1521,7 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg md:text-xl text-zinc-400 font-medium mb-8 leading-relaxed"
+              className="text-lg md:text-xl text-slate-500 font-medium mb-8 leading-relaxed"
             >
               Desde 2006, a Alpha Tech é referência em tecnologia da informação em Porto Alegre. Somos especialistas em suporte técnico, infraestrutura de rede, manutenção de equipamentos e soluções empresariais.
             </motion.p>
@@ -1398,7 +1530,7 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-base text-zinc-500 max-w-2xl mb-12 leading-relaxed"
+              className="text-base text-slate-400 max-w-2xl mb-12 leading-relaxed"
             >
               Nossa equipe de técnicos certificados está pronta para resolver qualquer desafio tecnológico com agilidade, transparência e excelência. Avaliados com nota 5 estrelas no Google em todas as nossas 3 unidades, garantimos qualidade, confiança e resultados que fazem a diferença no seu negócio.
             </motion.p>
@@ -1409,10 +1541,10 @@ export default function App() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="flex flex-wrap gap-4 mb-20"
             >
-              <a href="#contato" className="px-8 py-4 bg-brand-primary text-brand-dark font-bold rounded-xl hover:bg-brand-primary/90 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)]">
+              <a href="#contato" className="px-8 py-4 bg-brand-primary text-white font-bold rounded-xl hover:bg-brand-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-brand-primary/20">
                 Iniciar Conversa <ArrowRight size={18} />
               </a>
-              <a href="#servicos" className="px-8 py-4 bg-brand-surface/50 backdrop-blur-sm border border-white/10 text-white font-bold rounded-xl hover:bg-white/10 transition-all">
+              <a href="#servicos" className="px-8 py-4 bg-white border border-slate-200 text-slate-900 font-bold rounded-xl hover:bg-slate-50 transition-all shadow-sm">
                 Conhecer Mais
               </a>
             </motion.div>
@@ -1421,7 +1553,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.6 }}
-              className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 border-t border-white/5 pt-12"
+              className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 border-t border-slate-100 pt-12"
             >
               <StatCard value="500+" label="Projetos Concluídos" />
               <StatCard value="99%" label="Disponibilidade" />
@@ -1434,61 +1566,61 @@ export default function App() {
       <TechBrandsMarquee />
 
       {/* Diferenciais Section */}
-      <section className="py-20 bg-gradient-to-b from-brand-dark to-brand-surface/20">
+      <section className="py-20 bg-gradient-to-b from-brand-dark to-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="flex items-center gap-4 p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
+            <div className="flex items-center gap-4 p-6 bg-white shadow-sm rounded-2xl border border-slate-100 hover:border-brand-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all">
                 <Clock size={24} />
               </div>
               <div>
-                <h4 className="text-white font-bold">Agilidade 24h</h4>
-                <p className="text-zinc-500 text-sm">Formatação e montagem em até 24h</p>
+                <h4 className="text-slate-900 font-bold">Agilidade 24h</h4>
+                <p className="text-slate-400 text-sm">Formatação e montagem em até 24h</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
+            <div className="flex items-center gap-4 p-6 bg-white shadow-sm rounded-2xl border border-slate-100 hover:border-brand-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all">
                 <Smartphone size={24} />
               </div>
               <div>
-                <h4 className="text-white font-bold">WhatsApp</h4>
-                <p className="text-zinc-500 text-sm">Acompanhamento em tempo real</p>
+                <h4 className="text-slate-900 font-bold">WhatsApp</h4>
+                <p className="text-slate-400 text-sm">Acompanhamento em tempo real</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
+            <div className="flex items-center gap-4 p-6 bg-white shadow-sm rounded-2xl border border-slate-100 hover:border-brand-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all">
                 <ExternalLink size={24} />
               </div>
               <div>
-                <h4 className="text-white font-bold">O.S. e NFE</h4>
-                <p className="text-zinc-500 text-sm">Atendimento formal e profissional</p>
+                <h4 className="text-slate-900 font-bold">O.S. e NFE</h4>
+                <p className="text-slate-400 text-sm">Atendimento formal e profissional</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
+            <div className="flex items-center gap-4 p-6 bg-white shadow-sm rounded-2xl border border-slate-100 hover:border-brand-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all">
                 <MapPin size={24} />
               </div>
               <div>
-                <h4 className="text-white font-bold">Atendimento Local</h4>
-                <p className="text-zinc-500 text-sm">Na sua casa ou empresa</p>
+                <h4 className="text-slate-900 font-bold">Atendimento Local</h4>
+                <p className="text-slate-400 text-sm">Na sua casa ou empresa</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
+            <div className="flex items-center gap-4 p-6 bg-white shadow-sm rounded-2xl border border-slate-100 hover:border-brand-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all">
                 <Shield size={24} />
               </div>
               <div>
-                <h4 className="text-white font-bold">Garantia 3 Meses</h4>
-                <p className="text-zinc-500 text-sm">Em todos os serviços e peças</p>
+                <h4 className="text-slate-900 font-bold">Garantia 3 Meses</h4>
+                <p className="text-slate-400 text-sm">Em todos os serviços e peças</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
+            <div className="flex items-center gap-4 p-6 bg-white shadow-sm rounded-2xl border border-slate-100 hover:border-brand-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all">
                 <Zap size={24} />
               </div>
               <div>
-                <h4 className="text-white font-bold">SLA Imbatível</h4>
-                <p className="text-zinc-500 text-sm">O menor tempo de resposta do mercado</p>
+                <h4 className="text-slate-900 font-bold">SLA Imbatível</h4>
+                <p className="text-slate-400 text-sm">O menor tempo de resposta do mercado</p>
               </div>
             </div>
           </div>
@@ -1506,8 +1638,8 @@ export default function App() {
             className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
           >
             <div className="max-w-2xl">
-              <h2 className="text-4xl md:text-5xl mb-6">Nossos Serviços</h2>
-              <p className="text-zinc-500 text-lg">
+              <h2 className="text-4xl md:text-5xl mb-6 text-slate-900">Nossos Serviços</h2>
+              <p className="text-slate-500 text-lg">
                 Conheça nossos serviços e descubra como podemos transformar a tecnologia da sua empresa:
               </p>
             </div>
@@ -1522,6 +1654,7 @@ export default function App() {
                 icon={service.icon}
                 title={service.title}
                 description={service.description}
+                bgImage={service.bgImage}
                 onClick={() => setSelectedService(service)}
               />
             ))}
@@ -1532,9 +1665,9 @@ export default function App() {
       <SuccessCases />
 
       {/* Sobre Section */}
-      <section id="sobre" className="py-24 bg-brand-surface/50 relative overflow-hidden">
+      <section id="sobre" className="py-24 bg-slate-50 relative overflow-hidden">
         {/* Background Partners Marquee - Positioned behind photo/text */}
-        <div className="absolute top-[160px] md:top-[160px] left-0 w-full opacity-90 pointer-events-none z-0">
+        <div className="absolute top-[160px] md:top-[160px] left-0 w-full opacity-50 pointer-events-none z-0">
           <PartnersMarquee />
         </div>
 
@@ -1561,7 +1694,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="text-center md:text-left">
-                  <h3 className="text-2xl font-display font-bold text-white mb-1">Vagner Corrêa</h3>
+                  <h3 className="text-2xl font-display font-bold text-slate-900 mb-1">Vagner Corrêa</h3>
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[11px] font-mono uppercase tracking-wider">
                     &lt; Expertise Sênior em TI &gt;
                   </div>
@@ -1571,8 +1704,8 @@ export default function App() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-bold uppercase tracking-wider mb-6">
                 <CheckCircle2 size={10} /> Disponível para novos projetos
               </div>
-              <h2 className="text-4xl md:text-5xl mb-8 text-center md:text-left">Trajetória de Excelência</h2>
-              <p className="text-zinc-400 text-lg mb-12 leading-relaxed text-center md:text-left">
+              <h2 className="text-4xl md:text-5xl mb-8 text-center md:text-left text-slate-900">Trajetória de Excelência</h2>
+              <p className="text-slate-500 text-lg mb-12 leading-relaxed text-center md:text-left">
                 Uma jornada dedicada à excelência técnica, liderando projetos que redefineem padrões da indústria e entregam resultados mensuráveis para organizações de todos os portes.
               </p>
               
@@ -1593,9 +1726,9 @@ export default function App() {
               transition={{ duration: 0.8 }}
               className="relative"
             >
-              <div className="aspect-square rounded-3xl overflow-hidden border border-white/10 bg-brand-surface flex items-center justify-center p-12 relative">
+              <div className="aspect-square rounded-3xl overflow-hidden border border-slate-200 bg-white flex items-center justify-center p-12 relative shadow-xl">
                 {/* Background Glows */}
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/20 to-transparent opacity-50" />
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/10 to-transparent opacity-50" />
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-brand-primary/5 blur-[100px] rounded-full" />
                 
                 {/* Rotating Outer Ring */}
@@ -1616,7 +1749,7 @@ export default function App() {
                     { Icon: SiPython, color: "#3776AB", angle: 27.7 },
                     { Icon: SiNodedotjs, color: "#339933", angle: 55.4 },
                     { Icon: SiLinux, color: "#FCC624", angle: 83.1 },
-                    { Icon: SiApple, color: "#FFFFFF", angle: 110.8 },
+                    { Icon: SiApple, color: "#000000", angle: 110.8 },
                     { Icon: SiAndroid, color: "#3DDC84", angle: 138.5 },
                     { Icon: SiTypescript, color: "#3178C6", angle: 166.2 },
                     { Icon: SiJavascript, color: "#F7DF1E", angle: 193.9 },
@@ -1636,7 +1769,7 @@ export default function App() {
                       <motion.div 
                         animate={{ rotate: -360 }}
                         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                        className="p-2.5 bg-brand-dark/80 backdrop-blur-md border border-white/10 rounded-xl shadow-[0_0_15px_rgba(0,0,0,0.3)] group hover:border-brand-primary/50 transition-colors"
+                        className="p-2.5 bg-white backdrop-blur-md border border-slate-200 rounded-xl shadow-lg group hover:border-brand-primary/50 transition-colors"
                       >
                         <div className="opacity-70 group-hover:opacity-100 transition-opacity">
                           <item.Icon size={18} color={item.color} />
@@ -1662,11 +1795,11 @@ export default function App() {
                   <motion.span 
                     initial={{ scale: 0.5, opacity: 0 }}
                     whileInView={{ scale: 1, opacity: 1 }}
-                    className="block text-7xl md:text-8xl font-display font-bold text-white mb-2 drop-shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                    className="block text-7xl md:text-8xl font-display font-bold text-slate-900 mb-2 drop-shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                   >
                     20+
                   </motion.span>
-                  <span className="text-xs uppercase tracking-[0.3em] text-zinc-500 font-bold">Anos de Experiência</span>
+                  <span className="text-xs uppercase tracking-[0.3em] text-slate-400 font-bold">Anos de Experiência</span>
                 </div>
               </div>
             </motion.div>
@@ -1677,18 +1810,18 @@ export default function App() {
       <BlogSection />
 
       {/* Testimonials Section */}
-      <section className="py-32 relative overflow-hidden">
+      <section className="py-32 relative overflow-hidden bg-white">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
             src="https://i.ibb.co/dwJ3bJcw/image.png" 
             alt="Background" 
-            className="w-full h-full object-cover opacity-20 grayscale"
+            className="w-full h-full object-cover opacity-5 grayscale"
             referrerPolicy="no-referrer"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-dark via-brand-dark/95 to-brand-dark" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.05)_0%,transparent_70%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-dark via-white/95 to-white" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.02)_0%,transparent_70%)]" />
         </div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -1701,10 +1834,10 @@ export default function App() {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-8">
               <MessageSquare size={12} /> GOOGLE NOSSO AMIGO DESDE O COMEÇO...
             </div>
-            <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-8 tracking-tight">
+            <h2 className="text-4xl md:text-6xl font-display font-bold text-slate-900 mb-8 tracking-tight">
               Depoimentos <span className="text-brand-primary">Reais</span>
             </h2>
-            <p className="text-zinc-400 text-lg max-w-2xl mx-auto leading-relaxed mb-10">
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed mb-10">
               Confira o que nossos clientes dizem sobre a excelência técnica e o compromisso da Alpha Tech com resultados.
             </p>
             <div className="flex justify-center">
@@ -1714,7 +1847,7 @@ export default function App() {
                 viewport={{ once: true }}
                 src="https://i.ibb.co/Mx5j85hx/google-avaliacoes.webp" 
                 alt="Google Avaliações" 
-                className="h-16 md:h-24 object-contain drop-shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                className="h-16 md:h-24 object-contain drop-shadow-[0_10px_30px_rgba(16,185,129,0.1)]"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -1733,16 +1866,16 @@ export default function App() {
           >
             <div className="flex -space-x-4">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="w-12 h-12 rounded-full border-4 border-brand-dark overflow-hidden">
+                <div key={i} className="w-12 h-12 rounded-full border-4 border-white overflow-hidden shadow-sm">
                   <img src={`https://i.pravatar.cc/150?u=alpha${i}`} alt="Client" className="w-full h-full object-cover" />
                 </div>
               ))}
-              <div className="w-12 h-12 rounded-full border-4 border-brand-dark bg-brand-surface flex items-center justify-center text-white text-xs font-bold">
+              <div className="w-12 h-12 rounded-full border-4 border-white bg-slate-100 flex items-center justify-center text-slate-600 text-xs font-bold shadow-sm">
                 +2k
               </div>
             </div>
-            <p className="text-zinc-500 text-sm font-medium">
-              Junte-se a mais de <span className="text-white">2.000 clientes satisfeitos</span> em todo o Brasil.
+            <p className="text-slate-400 text-sm font-medium">
+              Junte-se a mais de <span className="text-slate-900">2.000 clientes satisfeitos</span> em todo o Brasil.
             </p>
           </motion.div>
         </div>
@@ -1758,8 +1891,8 @@ export default function App() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto px-6 text-center"
         >
-          <h2 className="text-4xl md:text-6xl mb-8">Pronto para Transformar Sua Presença Digital?</h2>
-          <p className="text-zinc-400 text-xl mb-12 max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-6xl mb-8 text-slate-900">Pronto para Transformar Sua Presença Digital?</h2>
+          <p className="text-slate-500 text-xl mb-12 max-w-2xl mx-auto">
             Vamos explorar como a expertise em tecnologia pode impulsionar seus objetivos estratégicos e transformar desafios em oportunidades.
           </p>
           
@@ -1768,7 +1901,7 @@ export default function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="https://wa.me/51986529520" 
-              className="w-full sm:w-auto px-10 py-5 bg-brand-primary text-brand-dark font-bold rounded-2xl hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-3"
+              className="w-full sm:w-auto px-10 py-5 bg-brand-primary text-white font-bold rounded-2xl hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand-primary/20"
             >
               <MessageSquare size={20} /> Conversar no WhatsApp
             </motion.a>
@@ -1776,7 +1909,7 @@ export default function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="mailto:vagnercorreaxspoa@icloud.com" 
-              className="w-full sm:w-auto px-10 py-5 bg-white/5 border border-white/10 text-white font-bold rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+              className="w-full sm:w-auto px-10 py-5 bg-white border border-slate-200 text-slate-900 font-bold rounded-2xl hover:bg-slate-50 transition-all flex items-center justify-center gap-3 shadow-sm"
             >
               <Mail size={20} /> Enviar E-mail
             </motion.a>
@@ -1785,17 +1918,17 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      <footer className="py-20 border-t border-white/5 bg-brand-dark">
+      <footer className="py-20 border-t border-slate-200 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
             <div className="col-span-1 md:col-span-1">
-              <a href="#" className="text-2xl font-display font-bold text-white tracking-tighter mb-2 block">
+              <a href="#" className="text-2xl font-display font-bold text-slate-900 tracking-tighter mb-2 block">
                 Alpha Tech<span className="text-brand-primary">.</span>
               </a>
-              <p className="text-zinc-400 text-xs font-medium mb-4">Hub de Soluções em TI desde 2006</p>
-              <h4 className="text-white font-bold mb-4">Vagner Correa</h4>
+              <p className="text-slate-500 text-xs font-medium mb-4">Hub de Soluções em TI desde 2006</p>
+              <h4 className="text-slate-900 font-bold mb-4">Vagner Correa</h4>
               <p className="text-brand-primary text-sm font-semibold mb-4">Transformando tecnologia em resultados</p>
-              <div className="space-y-3 text-zinc-500 text-sm mb-6">
+              <div className="space-y-3 text-slate-500 text-sm mb-6">
                 <div className="flex items-start gap-3">
                   <MapPin size={18} className="text-brand-primary flex-shrink-0" />
                   <span>Rua Travessa Escobar 219, sala 4<br />Bairro Camaquã – Porto Alegre/RS</span>
@@ -1815,8 +1948,8 @@ export default function App() {
             </div>
             
             <div>
-              <h4 className="text-sm uppercase tracking-widest text-white mb-6">Serviços</h4>
-              <ul className="space-y-4 text-zinc-500 text-sm">
+              <h4 className="text-sm uppercase tracking-widest text-slate-900 mb-6">Serviços</h4>
+              <ul className="space-y-4 text-slate-500 text-sm">
                 <li><a href="#" className="hover:text-brand-primary transition-colors">Suporte ao Usuário</a></li>
                 <li><a href="#" className="hover:text-brand-primary transition-colors">Configuração VPN</a></li>
                 <li><a href="#" className="hover:text-brand-primary transition-colors">Soluções Cloud</a></li>
@@ -1825,48 +1958,48 @@ export default function App() {
             </div>
             
             <div>
-              <h4 className="text-sm uppercase tracking-widest text-white mb-6">Pagamento</h4>
+              <h4 className="text-sm uppercase tracking-widest text-slate-900 mb-6">Pagamento</h4>
               <div className="flex flex-wrap gap-3 mb-6">
-                <div className="p-2 bg-white/5 rounded border border-white/10 flex items-center gap-2 text-xs text-zinc-400">
+                <div className="p-2 bg-white rounded border border-slate-200 flex items-center gap-2 text-xs text-slate-500 shadow-sm">
                   <CreditCard size={14} /> Pix
                 </div>
-                <div className="p-2 bg-white/5 rounded border border-white/10 flex items-center gap-2 text-xs text-zinc-400">
+                <div className="p-2 bg-white rounded border border-slate-200 flex items-center gap-2 text-xs text-slate-500 shadow-sm">
                   <CreditCard size={14} /> Cartão
                 </div>
-                <div className="p-2 bg-white/5 rounded border border-white/10 flex items-center gap-2 text-xs text-zinc-400">
+                <div className="p-2 bg-white rounded border border-slate-200 flex items-center gap-2 text-xs text-slate-500 shadow-sm">
                   <CreditCard size={14} /> Boleto
                 </div>
               </div>
-              <h4 className="text-sm uppercase tracking-widest text-white mb-4">Links Úteis</h4>
-              <ul className="space-y-4 text-zinc-500 text-sm">
+              <h4 className="text-sm uppercase tracking-widest text-slate-900 mb-4">Links Úteis</h4>
+              <ul className="space-y-4 text-slate-500 text-sm">
                 <li><a href="#" className="hover:text-brand-primary transition-colors">Termos de Uso</a></li>
                 <li><a href="#" className="hover:text-brand-primary transition-colors">Área do Cliente</a></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="text-sm uppercase tracking-widest text-white mb-6">Conecte-se</h4>
+              <h4 className="text-sm uppercase tracking-widest text-slate-900 mb-6">Conecte-se</h4>
               <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-brand-primary hover:border-brand-primary/50 transition-all">
+                <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-brand-primary hover:border-brand-primary/50 transition-all shadow-sm">
                   <Linkedin size={18} />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-brand-primary hover:border-brand-primary/50 transition-all">
+                <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-brand-primary hover:border-brand-primary/50 transition-all shadow-sm">
                   <Github size={18} />
                 </a>
-                <a href="mailto:vagnercorreaxspoa@icloud.com" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-brand-primary hover:border-brand-primary/50 transition-all">
+                <a href="mailto:vagnercorreaxspoa@icloud.com" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-brand-primary hover:border-brand-primary/50 transition-all shadow-sm">
                   <Mail size={18} />
                 </a>
               </div>
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-white/5 gap-6">
-            <p className="text-zinc-600 text-sm">
+          <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-slate-200 gap-6">
+            <p className="text-slate-400 text-sm">
               © 2026 ALPHA TECH - HUB DE SOLUÇÕES EM TI. Todos os direitos reservados.
             </p>
-            <div className="flex gap-8 text-zinc-600 text-sm">
-              <a href="#" className="hover:text-zinc-400 transition-colors">Privacidade</a>
-              <a href="#" className="hover:text-zinc-400 transition-colors">Termos</a>
+            <div className="flex gap-8 text-slate-400 text-sm">
+              <a href="#" className="hover:text-slate-600 transition-colors">Privacidade</a>
+              <a href="#" className="hover:text-slate-600 transition-colors">Termos</a>
             </div>
           </div>
         </div>

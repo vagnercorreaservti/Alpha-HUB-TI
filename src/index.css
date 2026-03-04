@@ -6,17 +6,17 @@
   --font-mono: "JetBrains Mono", monospace;
   
   --color-brand-primary: #10b981; /* Emerald 500 */
-  --color-brand-dark: #0a0a0a;
-  --color-brand-surface: #171717;
+  --color-brand-dark: #f8fafc; /* Slate 50 */
+  --color-brand-surface: #ffffff;
 }
 
 @layer base {
   body {
-    @apply bg-brand-dark text-zinc-300 antialiased selection:bg-brand-primary/30 selection:text-brand-primary;
+    @apply bg-brand-dark text-slate-600 antialiased selection:bg-brand-primary/30 selection:text-brand-primary;
   }
   
   h1, h2, h3, h4 {
-    @apply font-display font-semibold text-white tracking-tight;
+    @apply font-display font-semibold text-slate-900 tracking-tight;
   }
 }
 
