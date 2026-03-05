@@ -91,11 +91,11 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-brand-dark/80 backdrop-blur-md border-b border-white/5 py-4 shadow-sm' : 'bg-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="#" className="text-xl font-display font-bold text-white tracking-tighter flex items-center gap-2">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-brand-dark/90 backdrop-blur-md border-b border-white/5 py-4 shadow-sm' : 'bg-brand-dark/30 backdrop-blur-sm py-6'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+        <a href="#" className="text-lg sm:text-xl font-display font-bold text-white tracking-tighter flex items-center gap-1 sm:gap-2">
           <span className="text-brand-primary">Alpha Tech</span>
-          <span className="text-zinc-500 text-sm font-medium hidden sm:block">| Hub de Serviços em Ti</span>
+          <span className="text-white text-[9px] sm:text-sm font-normal whitespace-nowrap opacity-90">| Hub de Serviços em Ti</span>
         </a>
 
         {/* Desktop Nav */}
@@ -104,7 +104,7 @@ const Navbar = () => {
             <a 
               key={link.name} 
               href={link.href} 
-              className="text-sm font-medium text-zinc-400 hover:text-brand-primary transition-colors"
+              className="text-sm font-medium text-zinc-300 hover:text-brand-primary transition-colors"
             >
               {link.name}
             </a>
@@ -116,7 +116,7 @@ const Navbar = () => {
             onMouseEnter={() => setIsDownloadsOpen(true)}
             onMouseLeave={() => setIsDownloadsOpen(false)}
           >
-            <button className="flex items-center gap-1 text-sm font-medium text-zinc-400 hover:text-brand-primary transition-colors py-2">
+            <button className="flex items-center gap-1 text-sm font-medium text-zinc-300 hover:text-brand-primary transition-colors py-2">
               Downloads
               <ChevronDown size={14} className={`transition-transform duration-300 ${isDownloadsOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -234,10 +234,13 @@ const Navbar = () => {
 };
 
 const StatCard = ({ value, label }: { value: string, label: string }) => (
-  <div className="flex flex-col">
-    <span className="text-3xl md:text-4xl font-display font-bold text-white">{value}</span>
-    <span className="text-xs uppercase tracking-widest text-zinc-500 mt-1">{label}</span>
-  </div>
+  <motion.div 
+    whileHover={{ scale: 1.1, y: -5 }}
+    className="flex flex-col cursor-default group"
+  >
+    <span className="text-3xl md:text-4xl font-display font-bold text-white group-hover:text-brand-primary transition-colors">{value}</span>
+    <span className="text-xs uppercase tracking-widest text-zinc-500 mt-1 group-hover:text-zinc-400 transition-colors">{label}</span>
+  </motion.div>
 );
 
 interface ExpertiseCardProps {
@@ -290,15 +293,19 @@ const ExpertiseCard: React.FC<ExpertiseCardProps> = ({ icon: Icon, title, descri
     <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
     <div className="absolute -inset-[100%] group-hover:animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,rgba(0,255,209,0.05)_50%,transparent_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none z-10" />
     
-    <div className="relative z-20">
+    <div className="relative z-20 h-full flex flex-col">
       <div className="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-brand-dark transition-all duration-500 shadow-[0_0_20px_rgba(0,245,255,0.2)] group-hover:shadow-[0_0_30px_rgba(0,245,255,0.4)]">
         <Icon size={28} />
       </div>
-      <h3 className="text-2xl mb-3 font-bold text-white group-hover:text-brand-primary transition-colors tracking-tight">{title}</h3>
-      <p className="text-zinc-400 text-sm leading-relaxed mb-8 group-hover:text-zinc-200 transition-colors line-clamp-3">{description}</p>
-      <button className="inline-flex items-center gap-2 text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] hover:gap-4 transition-all group/link">
-        Explorar Solução <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
-      </button>
+      
+      {/* Text Content Container with transparent background for readability */}
+      <div className="flex-grow bg-brand-dark/60 backdrop-blur-md p-5 -m-2 rounded-2xl border border-white/10 group-hover:bg-brand-dark/80 group-hover:border-brand-primary/30 transition-all duration-500 shadow-xl">
+        <h3 className="text-2xl mb-3 font-bold text-white group-hover:text-brand-primary transition-colors tracking-tight">{title}</h3>
+        <p className="text-zinc-400 text-sm leading-relaxed mb-6 group-hover:text-zinc-200 transition-colors line-clamp-4">{description}</p>
+        <button className="inline-flex items-center gap-2 text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] hover:gap-4 transition-all group/link mt-auto">
+          Explorar Solução <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
+        </button>
+      </div>
     </div>
   </motion.div>
 );
@@ -452,21 +459,21 @@ const PartnersMarquee = () => {
   ];
 
   return (
-    <div className="py-8 bg-brand-primary/5 border-y border-white/5 overflow-hidden relative w-full">
-      <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-brand-dark to-transparent z-10" />
-      <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-brand-dark to-transparent z-10" />
+    <div className="py-8 bg-brand-primary/10 border-y border-white/10 overflow-hidden relative w-full">
+      <div className="absolute inset-y-0 left-0 w-32 md:w-48 bg-gradient-to-r from-brand-dark to-transparent z-10" />
+      <div className="absolute inset-y-0 right-0 w-32 md:w-48 bg-gradient-to-l from-brand-dark to-transparent z-10" />
       
       <motion.div 
         animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-        className="flex items-center gap-24 whitespace-nowrap w-max px-12"
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        className="flex items-center gap-12 md:gap-24 whitespace-nowrap w-max px-6 md:px-12"
       >
         {[...partners, ...partners].map((partner, i) => (
-          <div key={i} className="flex items-center gap-6 text-zinc-500 hover:text-brand-primary transition-all duration-300 group cursor-default">
-            <div className="opacity-60 group-hover:opacity-100 group-hover:scale-125 transition-all">
-              <partner.icon size={40} />
+          <div key={i} className="flex items-center gap-4 md:gap-6 text-zinc-300 hover:text-brand-primary transition-all duration-300 group cursor-default">
+            <div className="opacity-80 group-hover:opacity-100 group-hover:scale-125 transition-all">
+              <partner.icon size={32} className="md:w-10 md:h-10" />
             </div>
-            <span className="text-sm font-black uppercase tracking-[0.3em] opacity-40 group-hover:opacity-100 transition-all">{partner.name}</span>
+            <span className="text-[10px] md:text-sm font-black uppercase tracking-[0.2em] md:tracking-[0.3em] opacity-70 group-hover:opacity-100 transition-all">{partner.name}</span>
           </div>
         ))}
       </motion.div>
@@ -479,13 +486,18 @@ const TrajectoryItem = ({ text, index }: { text: string, index: number }) => (
     initial={{ opacity: 0, x: -20 }}
     whileInView={{ opacity: 1, x: 0 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.5, delay: index * 0.1 }}
-    className="flex items-start gap-4 py-4 border-b border-white/5 last:border-0"
+    whileHover={{ x: 10, scale: 1.02 }}
+    transition={{ 
+      duration: 0.5, 
+      delay: index * 0.1,
+      hover: { type: "spring", stiffness: 400 }
+    }}
+    className="flex items-start gap-4 py-4 border-b border-white/5 last:border-0 group cursor-default"
   >
-    <div className="mt-1 text-brand-primary">
+    <div className="mt-1 text-brand-primary group-hover:scale-125 transition-transform">
       <CheckCircle2 size={18} />
     </div>
-    <p className="text-zinc-400 font-medium">{text}</p>
+    <p className="text-zinc-400 font-medium group-hover:text-white transition-colors">{text}</p>
   </motion.div>
 );
 
@@ -510,42 +522,61 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const TestimonialCard = ({ name, content, image }: { name: string, content: string, image: string, key?: React.Key }) => (
-  <div className="w-[280px] sm:w-[320px] md:w-[380px] flex-shrink-0 bg-brand-surface/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-white/5 relative group hover:border-brand-primary/50 transition-all duration-500 mx-3 md:mx-4 flex flex-col shadow-xl">
-    <div className="absolute -top-4 -right-4 w-12 h-12 bg-brand-primary/10 rounded-full flex items-center justify-center text-brand-primary opacity-0 group-hover:opacity-100 transition-all duration-500 rotate-12">
-      <Quote size={20} />
+const TestimonialCard = ({ name, content, image, date }: { name: string, content: string, image: string, date: string, key?: React.Key }) => (
+  <motion.div 
+    whileHover={{ y: -10, scale: 1.02 }}
+    className="w-[320px] md:w-[380px] flex-shrink-0 bg-white p-8 pt-14 rounded-2xl shadow-lg relative mx-4 flex flex-col items-center text-center mt-12 mb-8 border border-zinc-100"
+  >
+    {/* Google Logo */}
+    <div className="absolute top-4 left-4">
+      <GoogleIcon size={20} />
     </div>
     
-    <div className="flex items-center gap-4 mb-6">
-      <div className="relative">
-        <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-brand-primary/30 group-hover:border-brand-primary transition-colors duration-500">
-          <img src={image} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-        </div>
-        <div className="absolute -bottom-1 -right-1 bg-brand-primary rounded-full p-1 border-2 border-brand-dark">
-          <BadgeCheck size={12} className="text-brand-dark" />
-        </div>
-      </div>
-      <div>
-        <h4 className="text-white font-bold text-base leading-tight group-hover:text-brand-primary transition-colors">{name}</h4>
-        <div className="flex gap-1 mt-1">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} size={12} className="fill-brand-primary text-brand-primary drop-shadow-[0_0_5px_rgba(0,245,255,0.5)]" />
-          ))}
-        </div>
+    {/* Avatar */}
+    <div className="absolute -top-10 w-20 h-20 rounded-full border-4 border-white shadow-md overflow-hidden">
+      <img src={image} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+      <div className="absolute bottom-0 right-0 bg-[#FBBC05] rounded-full p-1 border-2 border-white">
+        <Star size={10} className="fill-white text-white" />
       </div>
     </div>
 
-    <p className="text-zinc-400 text-sm leading-relaxed italic flex-1">
+    <h4 className="text-zinc-900 font-bold text-lg mb-1">{name}</h4>
+    
+    <div className="flex gap-0.5 mb-2">
+      {[...Array(5)].map((_, i) => (
+        <Star key={i} size={16} className="fill-[#FBBC05] text-[#FBBC05]" />
+      ))}
+    </div>
+    
+    <span className="text-zinc-400 text-[11px] mb-4 font-medium uppercase tracking-wider">{date}</span>
+
+    <p className="text-zinc-600 text-sm leading-relaxed line-clamp-4 italic">
       "{content}"
     </p>
-    
-    <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between">
+  </motion.div>
+);
+
+const GoogleRatingHeader = () => (
+  <div className="max-w-5xl mx-auto mb-16 bg-white p-6 rounded-2xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 border border-zinc-100">
+    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
       <div className="flex items-center gap-2">
-        <GoogleIcon />
-        <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Google Verified</span>
+        <GoogleIcon size={32} />
+        <span className="text-2xl font-normal text-zinc-500">Rating</span>
       </div>
-      <div className="text-[10px] text-brand-primary font-mono opacity-50">#ALPHA_CLIENT</div>
+      <div className="h-10 w-[1px] bg-zinc-200 hidden md:block" />
+      <div className="flex items-center gap-3">
+        <span className="text-2xl font-bold text-zinc-800">4.9</span>
+        <div className="flex gap-0.5">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} size={20} className="fill-[#FBBC05] text-[#FBBC05]" />
+          ))}
+        </div>
+        <span className="text-zinc-500 text-sm ml-2 font-medium">Based on 59 Reviews</span>
+      </div>
     </div>
+    <button className="bg-[#4285F4] hover:bg-[#357abd] text-white px-8 py-3 rounded-full font-bold transition-all shadow-md hover:shadow-lg active:scale-95 text-sm">
+      Write a Review
+    </button>
   </div>
 );
 
@@ -954,13 +985,18 @@ const TestimonialsMarquee = () => {
   ];
 
   // Double the array for seamless loop
-  const marqueeItems = [...testimonials, ...testimonials];
+  const marqueeItems = [...testimonials, ...testimonials].map((item, i) => ({
+    ...item,
+    date: i % 3 === 0 ? "October 4, 2023" : i % 3 === 1 ? "August 4, 2023" : "June 11, 2023"
+  }));
 
   return (
     <div className="py-10 relative w-full overflow-hidden pause-on-hover">
+      <GoogleRatingHeader />
+      
       {/* Gradient masks for smooth fade */}
-      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-brand-dark to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-brand-dark to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#F8F9FA] to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#F8F9FA] to-transparent z-10 pointer-events-none" />
       
       <div className="flex w-max animate-marquee py-4 items-stretch">
         {marqueeItems.map((item, i) => (
@@ -968,7 +1004,8 @@ const TestimonialsMarquee = () => {
             key={i} 
             name={item.name} 
             content={item.content} 
-            image={item.image} 
+            image={item.image}
+            date={item.date}
           />
         ))}
       </div>
@@ -1005,7 +1042,7 @@ const CodeRain = () => {
 
       ctx.fillStyle = "#00f5ff"; // brand-primary
       ctx.font = `${fontSize}px JetBrains Mono`;
-      ctx.globalAlpha = 0.15; // Very subtle
+      ctx.globalAlpha = 0.2; // More visible as per user image
 
       for (let i = 0; i < drops.length; i++) {
         const text = charArray[Math.floor(Math.random() * charArray.length)];
@@ -1135,6 +1172,12 @@ const SuccessCases = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              whileHover={{ y: -10, scale: 1.02 }}
+              transition={{ 
+                duration: 0.5,
+                type: "spring",
+                stiffness: 300
+              }}
               className="bg-brand-surface/40 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden group shadow-lg hover:shadow-[0_20px_40px_rgba(0,245,255,0.1)] transition-all duration-500"
             >
               <div className="relative aspect-video overflow-hidden">
@@ -1217,7 +1260,11 @@ const BlogSection = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              whileHover={{ y: -5, scale: 1.01 }}
+              transition={{ 
+                delay: i * 0.1,
+                duration: 0.3
+              }}
               className="p-8 bg-brand-surface/40 backdrop-blur-md border border-white/5 rounded-3xl hover:border-brand-primary/30 transition-all group cursor-pointer shadow-lg"
             >
               <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
@@ -1523,7 +1570,7 @@ export default function App() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg md:text-xl text-zinc-400 font-medium mb-8 leading-relaxed"
             >
-              Desde 2006, a Alpha Tech é referência em tecnologia da informação em Porto Alegre. Somos especialistas em suporte técnico, infraestrutura de rede, manutenção de equipamentos e soluções empresariais.
+              Desde 2016, a Alpha Tech Hub em Ti é referência em tecnologia da informação em Porto Alegre. Time liderado por Vagner Corrêa, expertise em Tecnologia com mais de 20 anos, se tornando Sênior em Tecnologia.
             </motion.p>
             
             <motion.p 
@@ -1532,7 +1579,7 @@ export default function App() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="text-base text-zinc-500 max-w-2xl mb-12 leading-relaxed"
             >
-              Nossa equipe de técnicos certificados está pronta para resolver qualquer desafio tecnológico com agilidade, transparência e excelência. Avaliados com nota 5 estrelas no Google em todas as nossas 3 unidades, garantimos qualidade, confiança e resultados que fazem a diferença no seu negócio.
+              Somos especialistas em suporte técnico, infraestrutura de rede, manutenção de equipamentos e soluções empresariais. Nossa equipe de técnicos certificados está pronta para resolver qualquer desafio tecnológico com agilidade, transparência e excelência. Avaliados com nota 5 estrelas no Google em nossas atividades Técnicas, garantimos qualidade, confiança e resultados que fazem a diferença no seu negócio.
             </motion.p>
             
             <motion.div 
@@ -1569,60 +1616,32 @@ export default function App() {
       <section className="py-20 bg-gradient-to-b from-brand-dark to-brand-surface">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="flex items-center gap-4 p-6 bg-brand-surface/40 backdrop-blur-md shadow-lg rounded-2xl border border-white/5 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
-                <Clock size={24} />
-              </div>
-              <div>
-                <h4 className="text-white font-bold">Agilidade 24h</h4>
-                <p className="text-zinc-500 text-sm">Formatação e montagem em até 24h</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-6 bg-brand-surface/40 backdrop-blur-md shadow-lg rounded-2xl border border-white/5 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
-                <Smartphone size={24} />
-              </div>
-              <div>
-                <h4 className="text-white font-bold">WhatsApp</h4>
-                <p className="text-zinc-500 text-sm">Acompanhamento em tempo real</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-6 bg-brand-surface/40 backdrop-blur-md shadow-lg rounded-2xl border border-white/5 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
-                <ExternalLink size={24} />
-              </div>
-              <div>
-                <h4 className="text-white font-bold">O.S. e NFE</h4>
-                <p className="text-zinc-500 text-sm">Atendimento formal e profissional</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-6 bg-brand-surface/40 backdrop-blur-md shadow-lg rounded-2xl border border-white/5 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
-                <MapPin size={24} />
-              </div>
-              <div>
-                <h4 className="text-white font-bold">Atendimento Local</h4>
-                <p className="text-zinc-500 text-sm">Na sua casa ou empresa</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-6 bg-brand-surface/40 backdrop-blur-md shadow-lg rounded-2xl border border-white/5 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
-                <Shield size={24} />
-              </div>
-              <div>
-                <h4 className="text-white font-bold">Garantia 3 Meses</h4>
-                <p className="text-zinc-500 text-sm">Em todos os serviços e peças</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-6 bg-brand-surface/40 backdrop-blur-md shadow-lg rounded-2xl border border-white/5 hover:border-brand-primary/30 transition-all group">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
-                <Zap size={24} />
-              </div>
-              <div>
-                <h4 className="text-white font-bold">SLA Imbatível</h4>
-                <p className="text-zinc-500 text-sm">O menor tempo de resposta do mercado</p>
-              </div>
-            </div>
+            {[
+              { icon: Clock, title: "Agilidade 24h", desc: "Formatação e montagem em até 24h" },
+              { icon: Smartphone, title: "WhatsApp", desc: "Acompanhamento em tempo real" },
+              { icon: ExternalLink, title: "O.S. e NFE", desc: "Atendimento formal e profissional" },
+              { icon: MapPin, title: "Atendimento Local", desc: "Na sua casa ou empresa" },
+              { icon: Shield, title: "Garantia 3 Meses", desc: "Em todos os serviços e peças" },
+              { icon: Zap, title: "SLA Imbatível", desc: "O menor tempo de resposta do mercado" }
+            ].map((item, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="flex items-center gap-4 p-6 bg-brand-surface/40 backdrop-blur-md shadow-lg rounded-2xl border border-white/5 hover:border-brand-primary/30 transition-all group cursor-default"
+              >
+                <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-dark transition-all">
+                  <item.icon size={24} />
+                </div>
+                <div>
+                  <h4 className="text-white font-bold">{item.title}</h4>
+                  <p className="text-zinc-500 text-sm">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -1667,7 +1686,7 @@ export default function App() {
       {/* Sobre Section */}
       <section id="sobre" className="py-24 bg-brand-dark relative overflow-hidden">
         {/* Background Partners Marquee - Positioned behind photo/text */}
-        <div className="absolute top-[160px] md:top-[160px] left-0 w-full opacity-30 pointer-events-none z-0">
+        <div className="absolute top-[140px] md:top-[160px] left-0 w-full opacity-60 pointer-events-none z-0">
           <PartnersMarquee />
         </div>
 
@@ -1704,18 +1723,17 @@ export default function App() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-bold uppercase tracking-wider mb-6">
                 <CheckCircle2 size={10} /> Disponível para novos projetos
               </div>
-              <h2 className="text-4xl md:text-5xl mb-8 text-center md:text-left text-white">Trajetória de Excelência</h2>
+              <h2 className="text-4xl md:text-5xl mb-8 text-center md:text-left text-white">Sobre a Alpha Tech Hub</h2>
               <p className="text-zinc-400 text-lg mb-12 leading-relaxed text-center md:text-left">
-                Uma jornada dedicada à excelência técnica, liderando projetos que redefineem padrões da indústria e entregam resultados mensuráveis para organizações de todos os portes.
+                Desde 2016, a Alpha Tech Hub em Ti é referência em tecnologia da informação em Porto Alegre. 
+                Time liderado por Vagner Corrêa, expertise em Tecnologia com mais de 20 anos, se tornando Sênior em Tecnologia.
               </p>
               
               <div className="space-y-2">
-                <TrajectoryItem index={0} text="Resolução de problemas críticos em ambientes de alta complexidade" />
-                <TrajectoryItem index={1} text="Implementação de infraestruturas que suportam operações 24/7" />
-                <TrajectoryItem index={2} text="Desenvolvimento de plataformas web escaláveis para empresas Fortune 500" />
-                <TrajectoryItem index={3} text="Fortalecimento de defesas digitais contra ameaças emergentes" />
-                <TrajectoryItem index={4} text="Liderança em projetos de transformação digital de grande escala" />
-                <TrajectoryItem index={5} text="Mentoria e desenvolvimento de equipes técnicas de elite" />
+                <TrajectoryItem index={0} text="Somos especialistas em suporte técnico, infraestrutura de rede, manutenção de equipamentos e soluções empresariais" />
+                <TrajectoryItem index={1} text="Nossa equipe de técnicos certificados está pronta para resolver qualquer desafio tecnológico com agilidade, transparência e excelência" />
+                <TrajectoryItem index={2} text="Avaliados com nota 5 estrelas no Google em nossas atividades Técnicas" />
+                <TrajectoryItem index={3} text="Garantimos qualidade, confiança e resultados que fazem a diferença no seu negócio" />
               </div>
             </motion.div>
             
@@ -1735,7 +1753,7 @@ export default function App() {
                 <motion.div 
                   animate={{ rotate: 360 }}
                   transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-4 border border-dashed border-brand-primary/20 rounded-full hidden sm:block"
+                  className="absolute inset-4 border border-dashed border-brand-primary/20 rounded-full"
                 />
 
                 {/* Orbiting Icons Container */}
@@ -1810,20 +1828,7 @@ export default function App() {
       <BlogSection />
 
       {/* Testimonials Section */}
-      <section className="py-32 relative overflow-hidden bg-brand-dark">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://i.ibb.co/dwJ3bJcw/image.png" 
-            alt="Background" 
-            className="w-full h-full object-cover opacity-5 grayscale"
-            referrerPolicy="no-referrer"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-dark via-brand-dark/95 to-brand-dark" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.02)_0%,transparent_70%)]" />
-        </div>
-
+      <section id="depoimentos" className="py-32 relative overflow-hidden bg-[#F8F9FA]">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1834,11 +1839,14 @@ export default function App() {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-8">
               <MessageSquare size={12} /> GOOGLE NOSSO AMIGO DESDE O COMEÇO...
             </div>
-            <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-8 tracking-tight">
+            <h2 className="text-4xl md:text-6xl font-display font-bold text-zinc-900 mb-8 tracking-tight">
               Depoimentos <span className="text-brand-primary">Reais</span>
             </h2>
-            <p className="text-zinc-400 text-lg max-w-2xl mx-auto leading-relaxed mb-10">
+            <p className="text-zinc-600 text-lg max-w-2xl mx-auto leading-relaxed mb-4">
               Confira o que nossos clientes dizem sobre a excelência técnica e o compromisso da Alpha Tech com resultados.
+            </p>
+            <p className="text-brand-primary font-bold text-sm md:text-base mb-10 tracking-wide">
+              (Junte-se a mais de 2.000 clientes satisfeitos em todo o Brasil.)
             </p>
             <div className="flex justify-center">
               <motion.img 
@@ -1866,16 +1874,16 @@ export default function App() {
           >
             <div className="flex -space-x-4">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="w-12 h-12 rounded-full border-4 border-brand-dark overflow-hidden shadow-sm">
+                <div key={i} className="w-12 h-12 rounded-full border-4 border-white overflow-hidden shadow-sm">
                   <img src={`https://i.pravatar.cc/150?u=alpha${i}`} alt="Client" className="w-full h-full object-cover" />
                 </div>
               ))}
-              <div className="w-12 h-12 rounded-full border-4 border-brand-dark bg-brand-surface flex items-center justify-center text-zinc-400 text-xs font-bold shadow-sm">
+              <div className="w-12 h-12 rounded-full border-4 border-white bg-zinc-100 flex items-center justify-center text-zinc-500 text-xs font-bold shadow-sm">
                 +2k
               </div>
             </div>
             <p className="text-zinc-500 text-sm font-medium">
-              Junte-se a mais de <span className="text-white">2.000 clientes satisfeitos</span> em todo o Brasil.
+              Junte-se a mais de <span className="text-zinc-900 font-bold">2.000 clientes satisfeitos</span> em todo o Brasil.
             </p>
           </motion.div>
         </div>
@@ -1923,9 +1931,9 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
             <div className="col-span-1 md:col-span-1">
               <a href="#" className="text-2xl font-display font-bold text-white tracking-tighter mb-2 block">
-                Alpha Tech<span className="text-brand-primary">.</span>
+                Alpha Tech Hub em Ti<span className="text-brand-primary">.</span>
               </a>
-              <p className="text-zinc-500 text-xs font-medium mb-4">Hub de Soluções em TI desde 2006</p>
+              <p className="text-zinc-500 text-xs font-medium mb-4">Hub de Soluções em TI desde 2016</p>
               <h4 className="text-white font-bold mb-4">Vagner Correa</h4>
               <p className="text-brand-primary text-sm font-semibold mb-4">Transformando tecnologia em resultados</p>
               <div className="space-y-3 text-zinc-400 text-sm mb-6">
@@ -1995,7 +2003,7 @@ export default function App() {
           
           <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-white/5 gap-6">
             <p className="text-zinc-500 text-sm">
-              © 2026 ALPHA TECH - HUB DE SOLUÇÕES EM TI. Todos os direitos reservados.
+              © 2026 ALPHA TECH HUB EM TI. Todos os direitos reservados.
             </p>
             <div className="flex gap-8 text-zinc-600 text-sm">
               <a href="#" className="hover:text-zinc-400 transition-colors">Privacidade</a>
