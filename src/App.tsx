@@ -274,10 +274,10 @@ const ExpertiseCard: React.FC<ExpertiseCardProps> = ({ icon: Icon, title, descri
         <img 
           src={bgImage} 
           alt={title} 
-          className="w-full h-full object-cover opacity-20 group-hover:opacity-40 group-hover:scale-110 transition-all duration-1000 grayscale group-hover:grayscale-0"
+          className="w-full h-full object-cover opacity-50 group-hover:opacity-80 group-hover:scale-110 transition-all duration-1000 grayscale group-hover:grayscale-0"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-surface via-brand-surface/80 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-surface via-brand-surface/60 to-transparent opacity-70 group-hover:opacity-40 transition-opacity duration-700" />
       </div>
     )}
 
@@ -327,7 +327,7 @@ const ServiceModal = ({ isOpen, onClose, service }: { isOpen: boolean, onClose: 
               <img 
                 src={service.bgImage} 
                 alt={service.title} 
-                className="w-full h-full object-cover opacity-5 grayscale"
+                className="w-full h-full object-cover opacity-20 grayscale"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-brand-surface via-brand-surface/95 to-brand-surface" />
@@ -1417,7 +1417,7 @@ export default function App() {
       icon: Server,
       title: "Gerenciamento de Servidores",
       description: "Deixe seus servidores nas mãos de especialistas. Configuração, monitoramento proativo, atualizações de segurança e manutenção preventiva.",
-      bgImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&q=80&w=1000",
+      bgImage: "https://images.unsplash.com/photo-1597733336794-12d05021d510?auto=format&fit=crop&q=80&w=1000",
       details: [
         "Administração de Windows e Linux Server",
         "Gestão de Active Directory (AD)",
